@@ -14,6 +14,22 @@ class VoiceInventory {
             }
         };
 
+        // Initialize cart
+        this.cart = {
+            items: {},
+            total: 0
+        };
+
+        // Mock prices for items
+        this.prices = {
+            'bananas': 0.50,  // per unit
+            'apples': 0.75,
+            'oranges': 0.80,
+            'lemons': 0.60,
+            'strawberries': 3.99,
+            'mangoes': 1.99
+        };
+
         this.micButton = document.getElementById('micButton');
         this.statusIndicator = document.getElementById('statusIndicator');
         this.transcriptText = document.getElementById('transcriptText');
@@ -320,7 +336,13 @@ class VoiceInventory {
             let response;
             let isOutOfStock = false;
             
-            if (this.isSalesQuery(lowerQuery) || this.containsTimePeriod(lowerQuery)) {
+            // Check for cart commands first
+            const cartMatch = lowerQuery.match(/add (\d+) (\w+)( to cart)?/);
+            if (cartMatch) {
+                const quantity = parseInt(cartMatch[1]);
+                const item = cartMatch[2];
+                response = await this.addToCart(item, quantity);
+            } else if (this.isSalesQuery(lowerQuery) || this.containsTimePeriod(lowerQuery)) {
                 response = this.processSalesQuery(lowerQuery);
             } else {
                 const inventoryResponse = await this.querySquareInventory(lowerQuery);
@@ -356,6 +378,77 @@ class VoiceInventory {
             this.responseText.textContent = errorMessage;
             this.speakResponse(errorMessage);
         }
+    }
+
+    async addToCart(item, quantity) {
+        // Check if item exists in inventory
+        if (!this.mockInventory.hasOwnProperty(item)) {
+            return `Sorry, ${item} is not available in our inventory.`;
+        }
+
+        // Check if item exists in prices
+        if (!this.prices.hasOwnProperty(item)) {
+            return `Sorry, ${item} is not available for purchase.`;
+        }
+
+        // Check if enough quantity is available
+        if (this.mockInventory[item] < quantity) {
+            return `Sorry, we only have ${this.mockInventory[item]} ${item} in stock.`;
+        }
+
+        // Add to cart
+        if (this.cart.items[item]) {
+            this.cart.items[item].quantity += quantity;
+        } else {
+            this.cart.items[item] = {
+                quantity: quantity,
+                price: this.prices[item]
+            };
+        }
+
+        // Update inventory
+        this.mockInventory[item] -= quantity;
+
+        // Update cart total
+        this.updateCartTotal();
+
+        // Update cart display
+        this.updateCartDisplay();
+
+        return `Added ${quantity} ${item} to your cart.`;
+    }
+
+    updateCartTotal() {
+        this.cart.total = Object.entries(this.cart.items).reduce((total, [item, details]) => {
+            return total + (details.quantity * details.price);
+        }, 0);
+
+        document.getElementById('cartTotal').textContent = 
+            new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(this.cart.total);
+    }
+
+    updateCartDisplay() {
+        const cartList = document.getElementById('cartItems');
+        cartList.innerHTML = '';
+
+        Object.entries(this.cart.items).forEach(([item, details]) => {
+            const li = document.createElement('li');
+            li.className = 'cart-item';
+            
+            const itemTotal = details.quantity * details.price;
+            li.innerHTML = `
+                <div class="cart-item-info">
+                    <span class="cart-item-quantity">${details.quantity}</span>
+                    <span class="cart-item-name">${item}</span>
+                </div>
+                <div class="cart-item-price">
+                    ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+                    .format(itemTotal)}
+                </div>
+            `;
+            cartList.appendChild(li);
+        });
     }
     
     async speakResponse(text) {
