@@ -1,64 +1,40 @@
-# Voice Inventory Assistant
+# Block SQUAWK v0.1
 
-A voice-controlled inventory and sales dashboard that responds to natural language queries with audio and visual feedback.
+This is version 0.1 of Block SQUAWK, a voice-enabled inventory and sales assistant. This version features:
 
-## Live Demo
-
-Try it out here: [Voice Inventory Assistant](https://sqhaimin.github.io/voice-inventory/)
+- Voice recognition for inventory queries
+- Sales data reporting
+- Visual effects (stars and deblur animations)
+- Sound effects
+- Out-of-stock notifications
+- Query history
 
 ## Features
 
-- 🎙️ Voice Recognition: Ask questions naturally
-- 🔊 Sound Effects: Custom audio feedback
-- 💰 Sales Tracking: Query revenue across different time periods
-- 📦 Inventory Management: Check stock levels
-- 🎉 Celebration Effects: Special effects for high revenue reports
+- Check inventory levels with voice commands (e.g., "How many bananas do we have?")
+- Query sales data for different time periods (hourly, daily, weekly, monthly, quarterly, yearly)
+- Visual feedback with star animations and smooth text reveal
+- Sound effects for responses
+- Special sound effect for out-of-stock items
+- Celebration effects for high revenue reports
+- Recent queries history panel
 
-## Example Queries
+## Demo
 
-### Inventory
-- "How many bananas do we have?"
-- "Check apple inventory"
-- "How many mangoes are in stock?"
+You can try the live demo at: https://sqhaimin.github.io/voice-inventory/
 
-### Sales
-- "What's our hourly revenue?"
-- "How much did we make today?"
+## Usage
+
+To run locally:
+```bash
+python3 server.py
+```
+Then open http://localhost:8000 in your browser.
+
+## Voice Commands
+
+Examples:
+- "How many apples do we have?"
+- "What's our daily revenue?"
 - "Show me monthly sales"
-- "What's our yearly revenue?"
-
-## Setup
-
-1. Clone the repository
-```bash
-git clone [repository-url]
-```
-
-2. Navigate to the project directory
-```bash
-cd voice-inventory
-```
-
-3. Start a local server (using Python)
-```bash
-python3 -m http.server 8000
-```
-
-4. Open in your browser
-```
-http://localhost:8000
-```
-
-## Requirements
-
-- Modern web browser (Chrome recommended for best speech recognition)
-- Microphone access
-- Python 3 (for local development server)
-
-## Technologies Used
-
-- Web Speech API
-- Web Audio API
-- HTML5
-- CSS3
-- JavaScript
+- "What are our yearly sales?"
