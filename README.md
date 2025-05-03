@@ -1,6 +1,6 @@
-# Block SQUAWK v0.1
+# Block SQUAWK Prototype
 
-This is version 0.1 of Block SQUAWK, a voice-enabled inventory and sales assistant. This version features:
+This is a prototype of Block SQUAWK, a voice-enabled inventory and sales assistant. This version features:
 
 - Voice recognition for inventory queries
 - Sales data reporting
